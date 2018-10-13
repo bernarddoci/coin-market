@@ -1,0 +1,18 @@
+.coin-detail .coin-item{
+  color: orange;
+}
+
+.coin-item a{
+  text-decoration: none;
+}
+
+.loading-spinner img{
+  padding: 30% 0;
+  min-height: 300px;
+}
+
+.footer{
+  background: #616161;
+  color: #fff;
+  padding: 5%;
+}
