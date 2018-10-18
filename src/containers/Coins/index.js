@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
-import CoinsList from '../../components/CoinsList';
+// import CoinsList from '../../components/CoinsList';
 import Loader from '../../components/Loader';
 import { connect } from 'react-redux';
 import Api from '../../helpers/Api.js';
+import symbol from '../../helpers/currencySymbol';
+import { withRouter } from 'react-router-dom';
 
 class Coins extends Component{
 
@@ -11,7 +13,12 @@ class Coins extends Component{
         this.props.getList(this.props.currency);
     }
 
+    handleClick(id) {
+        this.props.history.push(`/detail/${id}`);
+    }
+
     render() {
+        let symb = symbol[this.props.currency] + ' ';
         return (
             <Grid>
                 <Row>
@@ -30,7 +37,22 @@ class Coins extends Component{
                                             <th><button className="btn btn-success" onClick={() => this.props.getList(this.props.currency)}>Refresh</button></th>
                                         </tr>
                                     </thead>
-                                    <CoinsList list={this.props.coinsList}/>
+                                    <tbody>
+                                    {
+                                        this.props.coinsList.map(coin => {
+                                            return (
+                                                    <tr className="coin-detail" key={coin.id} onClick={() => this.handleClick(coin.id)}>
+                                                        <td className="coin-item">{coin.rank}</td>
+                                                        <td className="coin-item"><strong>{coin.name}</strong></td>
+                                                        <td className="coin-item">{coin.symbol}</td>
+                                                        <td className="coin-item">{symb + Number((coin.quotes[this.props.currency].price).toFixed(2)).toLocaleString()}</td>
+                                                        <td className="coin-item">{symb + (Number((coin.quotes[this.props.currency].volume_24h).toFixed(2))).toLocaleString()}</td>
+                                                        <td></td>
+                                                    </tr>
+                                            );
+                                        })
+                                    }
+                                    </tbody>
                                 </Table>
                         }
                     </Col>
@@ -42,8 +64,8 @@ class Coins extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        coinsList: state.coinsList,
         currency: state.fiatCurrency,
+        coinsList: state.coinsList,
         loading: state.loading
     }
 }
@@ -57,4 +79,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Coins);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Coins));

@@ -3,16 +3,19 @@ import { createStore } from 'redux';
 const initialState = {
     coinsList: [],
     fiatCurrency: 'USD',
-    coinDetail: {},
+    coinDetail: [],
+    quotes: {},
     loading: false
 }
 
-const reducer = (state = initialState, action) => {
-    switch(action.type) {
+const reducer = (state = initialState, payload) => {
+    switch(payload.type) {
         case 'GET_COINS_LIST':
-            return {...state, coinsList: action.payload.list, loading : action.payload.loading };
+            return {...state, coinsList: payload.list, fiatCurrency: payload.currency, loading: false};
+        case 'GET_COIN_DETAIL':
+            return {...state, coinDetail: payload.detail, fiatCurrency: payload.currency, quotes: payload.quotes, loading: false };
         case 'SET_LOADING':
-            return {...state, loading: action.value };
+            return {...state, loading: payload.value };
         default: 
             return state;
     }

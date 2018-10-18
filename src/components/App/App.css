@@ -1,5 +1,6 @@
 .coin-detail .coin-item{
   color: orange;
+  cursor: pointer;
 }
 
 .coin-item a{
