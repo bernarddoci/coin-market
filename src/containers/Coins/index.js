@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 
 class Coins extends Component{
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.getList(this.props.currency);
     }
 
@@ -24,7 +24,7 @@ class Coins extends Component{
                 <Row>
                     <Col xs={12} md={8} mdOffset={2}>
                         {
-                            this.props.loading 
+                            this.props.loading
                             ?   <Loader />
                             :   <Table responsive>
                                     <thead>
@@ -40,16 +40,20 @@ class Coins extends Component{
                                     <tbody>
                                     {
                                         this.props.coinsList.map(coin => {
-                                            return (
+                                            if(coin.quotes.hasOwnProperty(this.props.currency)){
+                                                return (
                                                     <tr className="coin-detail" key={coin.id} onClick={() => this.handleClick(coin.id)}>
                                                         <td className="coin-item">{coin.rank}</td>
                                                         <td className="coin-item"><strong>{coin.name}</strong></td>
                                                         <td className="coin-item">{coin.symbol}</td>
-                                                        <td className="coin-item">{symb + Number((coin.quotes[this.props.currency].price).toFixed(2)).toLocaleString()}</td>
-                                                        <td className="coin-item">{symb + (Number((coin.quotes[this.props.currency].volume_24h).toFixed(2))).toLocaleString()}</td>
+                                                        <td className="coin-item">{symb + coin.quotes[this.props.currency].price.toLocaleString()}</td>
+                                                        <td className="coin-item">{symb + coin.quotes[this.props.currency].volume_24h.toLocaleString()}</td>
                                                         <td></td>
-                                                    </tr>
-                                            );
+                                                    </tr>  
+                                                );  
+                                            } else {    
+                                                return null
+                                            }
                                         })
                                     }
                                     </tbody>
@@ -73,6 +77,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getList: (currency) => {
+            console.log('request made', currency);
             dispatch({type: 'SET_LOADING', value: true});
             Api.getCoinsList(dispatch, currency);
         }
