@@ -17,7 +17,7 @@ class CoinDetail extends Component{
 
     render() {
         let quotes = {}, symb = symbol[this.props.currency] + ' ';
-        if(Object.keys(this.props.quotes).length) {
+        if(this.props.quotes.hasOwnProperty(this.props.currency)) {
             quotes = this.props.quotes[this.props.currency];
         } else {
             return null;
